@@ -8,13 +8,25 @@ import java.util.List;
 public class Extrato extends Cliente{
 
     private List<Movimentacao> movimentacoes;
+    private Cliente cliente; // Adicione este atributo
 
     public Extrato() {
+        super(nome, endereco);
         this.movimentacoes = new ArrayList<>();
     }
 
-    public void adicionarMovimentacao(Movimentacao movimentacao) {
-        movimentacoes.add(movimentacao);
+    public Extrato(String nome, String endereco, List<Movimentacao> movimentacoes, Cliente cliente) {
+        super(nome, endereco);
+        this.movimentacoes = movimentacoes;
+        this.cliente = cliente;
+    }
+
+    // Construtor que recebe o objeto Cliente
+
+   public Extrato(Cliente cliente) { 
+        super(getNome(), getEndereco());
+        this.movimentacoes = new ArrayList<>();
+        this.cliente = cliente; // Atribua o cliente ao atributo
     }
 
     public void imprimirExtrato(Conta conta, LocalDate dataInicial, LocalDate dataFinal) {
@@ -22,8 +34,12 @@ public class Extrato extends Cliente{
 
         System.out.println("----------------------------------------------------");
         System.out.println("Extrato da Conta");
-        System.out.println("Banco: " + conta.getCliente().getNome());
-        System.out.println("Cliente: " + conta.getCliente().getNome());
+
+        // Utilize o atributo banco
+        // Utilize o atributo cliente
+        
+        System.out.println("Banco: " + BancoGui.getNome()); 
+        System.out.println("Cliente: " + this.cliente.getNome()); 
         System.out.println("Agência: " + conta.getAgencia());
         System.out.println("Conta: " + conta.getConta());
         System.out.println("----------------------------------------------------");

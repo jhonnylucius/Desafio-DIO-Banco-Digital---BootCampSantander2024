@@ -3,27 +3,31 @@ package banco;
 
 public class Cliente {
 
-    private String nome;
-    private String endereco;
+    protected static String nome;
+    protected static String endereco;
 
-    public Cliente(String nome, String endereco) {
-        this.nome = nome;
-        this.endereco = endereco;
+    protected Cliente(String nome, String endereco) {
+        Cliente.nome = nome;
+        Cliente.endereco = endereco;
     }
 
-    public String getNome() {
+    // Getters
+    public static String getNome() {
         return nome;
     }
 
-    public String getEndereco() {
+    public static String getEndereco() {
         return endereco;
     }
 
-    @Override
-    public String toString() {
-        return "Cliente{" +
-                "nome='" + nome + '\'' +
-                ", endereco='" + endereco + '\'' +
-                '}';
+    // Setters (métodos protegidos)
+    protected void setNome(String nome) {
+        Cliente.nome = nome;
     }
+
+    protected void setEndereco(String endereco) {
+        Cliente.endereco = endereco;
+    }
+
+   
 }

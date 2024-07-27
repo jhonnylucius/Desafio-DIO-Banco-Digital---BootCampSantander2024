@@ -1,9 +1,7 @@
 package banco;
-
 public class Main {
 
-    public static void main(String[] args) {
-        Banco banco = new Banco("Banco do Código", 12345);
-        BancoGUI gui = new BancoGUI(banco);
+    public static <BancoGUI> void main(String[] args) {
+        BancoGUI gui = (BancoGUI) new Main(); // Cria a interface gráfica
     }
 }

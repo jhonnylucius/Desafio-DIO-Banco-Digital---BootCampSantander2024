@@ -1,16 +1,19 @@
 package banco;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalField;
 import java.util.Locale;
 
 public class BancoGui extends JFrame {
 
-    private BancoGui banco;
+   
     private JTextField txtNomeCliente;
     private JTextField txtEnderecoCliente;
     private JTextField txtSenha;
@@ -23,10 +26,14 @@ public class BancoGui extends JFrame {
     private JTextField txtDataFinal;
     private Extrato extrato;
     private JTextArea txtAreaExtrato;
+    private Banco banco;
+    private BancoGui bancoGUI;
+
 
     public BancoGui(BancoGui banco) {
-        this.banco = banco;
+        this.banco = new Banco("Banco Código", 12345);
         this.extrato = new Extrato();
+        this.bancoGUI = new BancoGui(banco);
         setTitle("Sistema Bancário");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
@@ -109,7 +116,7 @@ public class BancoGui extends JFrame {
         btnDepositar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                depositar();
+                depositar(txtAreaExtrato, txtAreaExtrato, null);
             }
         });
 
@@ -162,6 +169,16 @@ public class BancoGui extends JFrame {
         setVisible(true);
     }
 
+    protected void transferir() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'transferir'");
+    }
+
+    protected void sacar() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'sacar'");
+    }
+
     private void criarConta() {
         String nomeCliente = txtNomeCliente.getText();
         String enderecoCliente = txtEnderecoCliente.getText();
@@ -188,7 +205,7 @@ public class BancoGui extends JFrame {
         JOptionPane.showMessageDialog(this, "Conta criada com sucesso! \nDados da Conta: \n" + conta);
     }
 
-    private void depositar() {
+    private void depositar(JTextComponent txtAgencia, JTextComponent txtConta, LocalDate contas) {
         if (txtValor.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Informe o valor do depósito.");
             return;
@@ -196,24 +213,31 @@ public class BancoGui extends JFrame {
 
         try {
             double valor = Double.parseDouble(txtValor.getText());
-            String senhaDigitada = JOptionPane.showInputDialog(this, "Digite a senha da conta:");
-            if (senhaDigitada != null && !senhaDigitada.isEmpty()) {
-                // TODO: Implementar lógica de busca da conta para depósito
-                // Buscar a conta (corrente ou poupança) usando a agência, conta e senha digitada
-                // ...
-                // Realizar o depósito
-                // ...
-                // Mostrar mensagem de sucesso
-                JOptionPane.showMessageDialog(this, "Depósito realizado com sucesso.");
-            } else {
-                JOptionPane.showMessageDialog(this, "Senha inválida.");
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Valor inválido.");
-        }
+String senhaDigitada = JOptionPane.showInputDialog(this, "Digite a senha da conta:");
+
+if (senhaDigitada != null && !senhaDigitada.isEmpty()) {
+    // TODO: Implementar lógica de busca da conta para depósito
+    String agencia = txtAgencia.getText();
+    String contaNumero = txtConta.getText();
+    Conta conta = contas.get(contaNumero); // Buscar a conta (corrente ou poupança) usando a agência, conta e senha digitada
+
+    if (conta != null && conta.getAgencia().equals(agencia) && conta.validarSenha(senhaDigitada)) {
+        // TODO: Realizar o depósito
+        conta.depositar(valor, contaNumero);
+        
+        // Mostrar mensagem de sucesso
+        JOptionPane.showMessageDialog(this, "Depósito realizado com sucesso.");
+    } else {
+        // Conta não encontrada ou senha incorreta
+        JOptionPane.showMessageDialog(this, "Conta não encontrada ou senha incorreta.");
+    }
+} else {
+    // Senha não digitada
+    JOptionPane.showMessageDialog(this, "Depósito cancelado. Senha não foi digitada.");
+}
     }
 
-    private void sacar() {
+    private void sacar(JTextComponent txtAgencia) {
         if (txtValor.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Informe o valor do saque.");
             return;
@@ -222,23 +246,33 @@ public class BancoGui extends JFrame {
         try {
             double valor = Double.parseDouble(txtValor.getText());
             String senhaDigitada = JOptionPane.showInputDialog(this, "Digite a senha da conta:");
+            
             if (senhaDigitada != null && !senhaDigitada.isEmpty()) {
-                // TODO: Implementar lógica de busca da conta para saque
-                // Buscar a conta (corrente ou poupança) usando a agência, conta e senha digitada
-                // ...
-                // Realizar o saque
-                // ...
-                // Mostrar mensagem de sucesso ou erro
-                // ...
+                // TODO: Implementar lógica de busca da conta para depósito
+                String agencia = txtAgencia.getText();
+                String contaNumero = txtConta.getText();
+                Conta conta = contas.get(contaNumero); // Buscar a conta (corrente ou poupança) usando a agência, conta e senha digitada
+            
+                if (conta != null && conta.getAgencia().equals(agencia) && conta.validarSenha(senhaDigitada)) {
+                    // TODO: Realizar o depósito
+                    conta.depositar(valor);
+                    
+                    // Mostrar mensagem de sucesso
+                    JOptionPane.showMessageDialog(this, "Depósito realizado com sucesso.");
+                } else {
+                    // Conta não encontrada ou senha incorreta
+                    JOptionPane.showMessageDialog(this, "Conta não encontrada ou senha incorreta.");
+                }
             } else {
-                JOptionPane.showMessageDialog(this, "Senha inválida.");
+                // Senha não digitada
+                JOptionPane.showMessageDialog(this, "Depósito cancelado. Senha não foi digitada.");
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Valor inválido.");
         }
     }
 
-    private void transferir() {
+    private void transferir(LocalDate contas) {
         if (txtValor.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Informe o valor da transferência.");
             return;
@@ -246,36 +280,82 @@ public class BancoGui extends JFrame {
 
         try {
             double valor = Double.parseDouble(txtValor.getText());
-            String senhaDigitada = JOptionPane.showInputDialog(this, "Digite a senha da conta de origem:");
-            if (senhaDigitada != null && !senhaDigitada.isEmpty()) {
-                // TODO: Implementar lógica de busca da conta de origem
-                // Buscar a conta (corrente ou poupança) usando a agência, conta e senha digitada
-                // ...
-                // Solicitar dados da conta de destino
-                // ...
-                // Validar se a conta de destino existe
-                // ...
-                // Realizar a transferência
-                // ...
-                // Mostrar mensagem de sucesso ou erro
-                // ...
+        String senhaDigitada = JOptionPane.showInputDialog(this, "Digite a senha da conta de origem:");
+        
+        if (senhaDigitada != null && !senhaDigitada.isEmpty()) {
+            // TODO: Implementar lógica de busca da conta de origem
+            String agenciaOrigem = JOptionPane.showInputDialog(this, "Digite a agência da conta de origem:");
+            TemporalField contaOrigemNumero = JOptionPane.showInputDialog(this, "Digite o número da conta de origem:");
+            Conta contaOrigem = contas.get(contaOrigemNumero); // Buscar a conta de origem
+
+            if (contaOrigem != null && contaOrigem.getAgencia().equals(agenciaOrigem) && contaOrigem.validarSenha(senhaDigitada)) {
+                // TODO: Solicitar dados da conta de destino
+                String agenciaDestino = JOptionPane.showInputDialog(this, "Digite a agência da conta de destino:");
+                String contaDestinoNumero = JOptionPane.showInputDialog(this, "Digite o número da conta de destino:");
+                Conta contaDestino = contas.get(contaDestinoNumero); // Buscar a conta de destino
+
+                // TODO: Validar se a conta de destino existe
+                if (contaDestino != null && contaDestino.getAgencia().equals(agenciaDestino)) {
+                    // TODO: Realizar a transferência
+                    contaOrigem.transferir(valor, contaDestino);
+
+                    // Mostrar mensagem de sucesso
+                    JOptionPane.showMessageDialog(this, "Transferência realizada com sucesso.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Conta de destino não encontrada.");
+                }
             } else {
-                JOptionPane.showMessageDialog(this, "Senha inválida.");
+                JOptionPane.showMessageDialog(this, "Conta de origem não encontrada ou senha incorreta.");
             }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Valor inválido.");
+        } else {
+            JOptionPane.showMessageDialog(this, "Senha inválida.");
         }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Valor inválido.");
     }
+        
+    
 
     private void gerarExtrato() {
-        // TODO: Implementar lógica de busca da conta para extrato
-        // Buscar a conta (corrente ou poupança) usando a agência, conta e senha digitada
-        // ...
-        // Validar as datas
-        // ...
-        // Gerar o extrato
-        // ...
-        // Mostrar o extrato na área de texto
-        // ...
+        String agencia = JOptionPane.showInputDialog(this, "Digite a agência da conta:");
+        String contaNumero = JOptionPane.showInputDialog(this, "Digite o número da conta:");
+        String senhaDigitada = JOptionPane.showInputDialog(this, "Digite a senha da conta:");
+        
+        if (agencia == null || contaNumero == null || senhaDigitada == null ||
+            agencia.isEmpty() || contaNumero.isEmpty() || senhaDigitada.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Todos os campos devem ser preenchidos.");
+            return;
+        }
+    
+        Conta conta = banco.buscarConta(agencia, contaNumero); // Implementar o método buscarConta no banco
+    
+        if (conta != null && conta.validarSenha(senhaDigitada)) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH);
+                LocalDate dataInicial = LocalDate.parse(txtDataInicial.getText(), formatter);
+                LocalDate dataFinal = LocalDate.parse(txtDataFinal.getText(), formatter);
+    
+                if (dataInicial.isAfter(dataFinal)) {
+                    JOptionPane.showMessageDialog(this, "A data inicial deve ser anterior à data final.");
+                    return;
+                }
+    
+                String extrato = conta.gerarExtrato(dataInicial, dataFinal); // Implementar o método gerarExtrato na classe Conta
+                txtAreaExtrato.setText(extrato);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Erro ao gerar o extrato: " + e.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Conta não encontrada ou senha incorreta.");
+        }
+    
+    
+
+    public static String getNome() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getNome'");
     }
 }
+}
+}
+

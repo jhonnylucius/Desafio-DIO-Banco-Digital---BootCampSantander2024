@@ -1,16 +1,24 @@
 package banco;
+
+import java.time.LocalDate;
+
 public abstract class Conta {
 
     private static int proximoNumeroConta = 1;
     protected int agencia;
-    protected int conta;
+    protected String conta;
     private String senha;
     protected double saldo;
     protected Cliente cliente;
+    protected String CodigoTipoDeConta;
+
+    public String getCodigoTipoDeConta() {
+        return CodigoTipoDeConta;
+    }
 
     public Conta(Cliente cliente, String senha) {
         this.agencia = 420; // Agência sempre 420
-        this.conta = proximoNumeroConta++;
+        this.conta = "C" + proximoNumeroConta++;
         this.senha = senha;
         this.saldo = 0;
         this.cliente = cliente;
@@ -20,7 +28,7 @@ public abstract class Conta {
         return agencia;
     }
 
-    public int getConta() {
+    public String getConta() {
         return conta;
     }
 
@@ -85,4 +93,8 @@ public abstract class Conta {
                 ", cliente=" + cliente +
                 '}';
     }
+
+    protected abstract boolean validarSenha(String senhaDigitada);
+
+    protected abstract String gerarExtrato(LocalDate dataInicial, LocalDate dataFinal);
 }
