@@ -63,8 +63,6 @@ Solicita o número da conta e a senha para validação.</br>
 
 Implementar a persistência de dados para salvar as informações das contas e </br>clientes de forma permanente.</br>
 </br>
-Adicionar novas funcionalidades como consulta de saldo, histórico de movimentações</br> e outras operações bancárias.</br>
-</br>
 Melhorar a segurança, como criptografando as senhas.</br>
 </br>
 Observações</br>
