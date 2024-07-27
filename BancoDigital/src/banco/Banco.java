@@ -25,4 +25,9 @@ public class Banco {
                 ", codigo=" + codigo +
                 '}';
     }
+
+    public Conta buscarConta(String agencia, String contaNumero) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'buscarConta'");
+    }
 }
