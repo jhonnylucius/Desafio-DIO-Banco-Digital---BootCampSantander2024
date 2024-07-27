@@ -2,32 +2,14 @@ package banco;
 
 public class Banco {
 
-    private String nome;
-    private int codigo;
+	private String nome;
 
-    public Banco(String nome, int codigo) {
-        this.nome = nome;
-        this.codigo = codigo;
-    }
+	public String getNome() {
+		return nome;
+	}
 
-    public String getNome() {
-        return nome;
-    }
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
-    public int getCodigo() {
-        return codigo;
-    }
-
-    @Override
-    public String toString() {
-        return "Banco{" +
-                "nome='" + nome + '\'' +
-                ", codigo=" + codigo +
-                '}';
-    }
-
-    public Conta buscarConta(String agencia, String contaNumero) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'buscarConta'");
-    }
 }

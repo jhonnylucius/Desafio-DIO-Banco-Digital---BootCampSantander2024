@@ -1,100 +1,89 @@
 package banco;
 
-import java.time.LocalDate;
+public abstract class Conta implements IConta {
+	
+	private static final int AGENCIA_PADRAO = 1;
+	private static int SEQUENCIAL = 1;
+	protected int agencia;
+	protected int numero;
+	protected double saldo = 1000;
+	protected double sAnterior = saldo;
+	protected double vTransferido;
+	
+	
+	
+	
+	public Conta() {
+		this.agencia = Conta.AGENCIA_PADRAO;
+		this.numero = SEQUENCIAL++;	
+}
 
-public abstract class Conta {
+	@Override
+	public void sacar(double valor) {
+		
+		saldo-= valor;
+	}
+		
+	@Override
+	public void sAnterior(double saldo) {
+			
+		sAnterior = saldo;
+	}
 
-    private static int proximoNumeroConta = 1;
-    protected int agencia;
-    protected String conta;
-    private String senha;
-    protected double saldo;
-    protected Cliente cliente;
-    protected String CodigoTipoDeConta;
+	public double getsAnterior() {
+		return sAnterior;
+	}
 
-    public String getCodigoTipoDeConta() {
-        return CodigoTipoDeConta;
-    }
+	@Override
+	public void depositar(double valor) {
+		saldo += valor;
+	}
 
-    public Conta(Cliente cliente, String senha) {
-        this.agencia = 420; // Agência sempre 420
-        this.conta = "C" + proximoNumeroConta++;
-        this.senha = senha;
-        this.saldo = 0;
-        this.cliente = cliente;
-    }
+	@Override
+	public void transferir(double valor, IConta contaDestino) {
+		this.vTransferido = valor;
+		this.sacar(valor);
+		contaDestino.depositar(valor);
+	}
+	
+	@Override
+	public void transferido(double valor) {
+		
+		vTransferido = valor;
+	}
+	
+	@Override
+	public void pixTransferir(double valor, IConta contaDestino) {
+		this.vTransferido = valor;
+		this.sacar(valor);
+		contaDestino.depositar(valor);
+	}
+	
+	public int getAgencia() {
+		return agencia;
+	}
 
-    public int getAgencia() {
-        return agencia;
-    }
+	public int getNumero() {
+		return numero;
+	}
 
-    public String getConta() {
-        return conta;
-    }
+	public double getSaldo() {
+		return saldo;
+	}
+	
+	public double getvTransferido() {
+		return vTransferido;
+	}
 
-    public double getSaldo() {
-        return saldo;
-    }
+	
+	protected void imprimirInformacoes() {
+	
+		System.out.println(String.format("Agencia: %d", this.agencia));
+		System.out.println(String.format("Numero: %d", this.numero));
+		System.out.println(String.format("Saldo anterior: %.2f", this.sAnterior));
+		System.out.println(String.format("Valor transferido: %.2f", this.vTransferido));
+		System.out.println(String.format("Saldo: %.2f", this.saldo));
+	}
+	
 
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public boolean verificarSenha(String senhaDigitada) {
-        return this.senha.equals(senhaDigitada);
-    }
-
-    public void depositar(double valor, String senhaDigitada) {
-        if (verificarSenha(senhaDigitada)) {
-            this.saldo += valor;
-            System.out.println("Depósito de R$ " + valor + " realizado com sucesso.");
-        } else {
-            System.out.println("Senha incorreta.");
-        }
-    }
-
-    public void sacar(double valor, String senhaDigitada) {
-        if (verificarSenha(senhaDigitada)) {
-            if (valor <= saldo) {
-                this.saldo -= valor;
-                System.out.println("Saque de R$ " + valor + " realizado com sucesso.");
-            } else {
-                System.out.println("Saldo insuficiente.");
-            }
-        } else {
-            System.out.println("Senha incorreta.");
-        }
-    }
-
-    public void transferir(double valor, Conta contaDestino, String senhaDigitada) {
-        if (verificarSenha(senhaDigitada)) {
-            if (valor <= saldo && this.agencia == contaDestino.agencia) {
-                this.sacar(valor, senhaDigitada);
-                contaDestino.depositar(valor, contaDestino.senha);
-                System.out.println("Transferência de R$ " + valor + " realizada com sucesso.");
-            } else {
-                if (this.agencia != contaDestino.agencia) {
-                    System.out.println("Transferência para outra agência não permitida.");
-                } else {
-                    System.out.println("Saldo insuficiente.");
-                }
-            }
-        } else {
-            System.out.println("Senha incorreta.");
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "Conta{" +
-                "agencia=" + agencia +
-                ", conta=" + conta +
-                ", saldo=" + saldo +
-                ", cliente=" + cliente +
-                '}';
-    }
-
-    protected abstract boolean validarSenha(String senhaDigitada);
-
-    protected abstract String gerarExtrato(LocalDate dataInicial, LocalDate dataFinal);
 }

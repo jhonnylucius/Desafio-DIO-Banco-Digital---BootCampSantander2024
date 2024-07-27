@@ -1,33 +1,15 @@
 package banco;
 
-
 public class Cliente {
 
-    protected static String nome;
-    protected static String endereco;
+	private String nome;
 
-    protected Cliente(String nome, String endereco) {
-        Cliente.nome = nome;
-        Cliente.endereco = endereco;
-    }
+	public String getNome() {
+		return nome;
+	}
 
-    // Getters
-    public static String getNome() {
-        return nome;
-    }
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
-    public static String getEndereco() {
-        return endereco;
-    }
-
-    // Setters (métodos protegidos)
-    protected void setNome(String nome) {
-        Cliente.nome = nome;
-    }
-
-    protected void setEndereco(String endereco) {
-        Cliente.endereco = endereco;
-    }
-
-   
 }
